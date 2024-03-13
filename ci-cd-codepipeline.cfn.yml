@@ -40,7 +40,7 @@ Parameters:
 
   GitHubUser:
     Type: String
-    Default: SudKul
+    Default: deekshagg
     Description: GitHub username or organization
     MinLength: 3
     MaxLength: 100
@@ -120,6 +120,7 @@ Resources:
           import json
           import boto3
           from botocore.vendored import requests
+          import cfnresponse
           def handler(event, context):
             response = {
               'Status': 'SUCCESS',
@@ -130,6 +131,9 @@ Resources:
               'LogicalResourceId': event['LogicalResourceId'],
               'Data': {"Message": "Resource creation successful!"},
             }
+
+            cfnresponse.send(event, context, cfnresponse.SUCCESS, response, context.log_stream_name)
+
 
             client = boto3.client('iam')
             try:
@@ -161,7 +165,7 @@ Resources:
 
       Handler: index.handler
       Role: !GetAtt CustomResourceLambdaExecutionRole.Arn
-      Runtime: python3.7
+      Runtime: python3.12
       Timeout: 300
 
   CustomResourceLambdaExecutionRole:
